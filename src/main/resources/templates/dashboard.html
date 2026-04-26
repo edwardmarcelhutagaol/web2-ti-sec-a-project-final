@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html th:replace="~{layout :: layout(~{::title}, ~{::div})}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="content">
+        <h2 class="mb-4">Inventory Dashboard</h2>
+
+        <div th:if="${!hasProducts}" class="alert alert-info">
+            <h4>Welcome!</h4>
+            <p>You don't have any products yet. Start by <a th:href="@{/categories}">adding a category</a> and then <a th:href="@{/products/add}">adding a product</a>.</p>
+        </div>
+
+        <div th:if="${hasProducts}">
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white stats-card h-100 p-3">
+                        <h6>Total Products</h6>
+                        <h3 th:text="${totalProducts}">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white stats-card h-100 p-3">
+                        <h6>Inventory Value</h6>
+                        <h3 th:text="'Rp ' + ${#numbers.formatDecimal(totalValue, 0, 'COMMA', 2, 'POINT')}">Rp 0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white stats-card h-100 p-3">
+                        <h6>Active Products</h6>
+                        <h3 th:text="${activeProducts}">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white stats-card h-100 p-3">
+                        <h6>Inactive Products</h6>
+                        <h3 th:text="${inactiveProducts}">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Products by Category -->
+                <div class="col-md-6">
+                    <div class="card p-4 h-100">
+                        <h5>Products per Category</h5>
+                        <ul class="list-group list-group-flush">
+                            <li th:each="entry : ${productsByCategory}" class="list-group-item d-flex justify-content-between align-items-center">
+                                <span th:text="${entry.key}">Category</span>
+                                <span class="badge bg-primary rounded-pill" th:text="${entry.value}">0</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="col-md-6">
+                    <div class="card p-4 h-100">
+                        <h5 class="text-danger">Low Stock Alert (Stock < 5)</h5>
+                        <div th:if="${#lists.isEmpty(lowStockProducts)}" class="text-muted">
+                            All products are well-stocked.
+                        </div>
+                        <table th:if="${!#lists.isEmpty(lowStockProducts)}" class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${lowStockProducts}">
+                                    <td th:text="${p.name}">Product Name</td>
+                                    <td><span class="badge bg-danger" th:text="${p.stock}">0</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

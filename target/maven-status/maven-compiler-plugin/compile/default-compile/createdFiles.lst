@@ -1,0 +1,16 @@
+com\example\inventory\controller\ProductController.class
+com\example\inventory\InventoryApplication.class
+com\example\inventory\controller\CategoryController.class
+com\example\inventory\repository\ProductRepository.class
+com\example\inventory\service\UserService.class
+com\example\inventory\model\Product.class
+com\example\inventory\repository\UserRepository.class
+com\example\inventory\controller\AuthController.class
+com\example\inventory\service\ProductService.class
+com\example\inventory\controller\DashboardController.class
+com\example\inventory\config\SecurityConfig.class
+com\example\inventory\model\Category.class
+com\example\inventory\repository\CategoryRepository.class
+com\example\inventory\service\CategoryService.class
+com\example\inventory\model\User.class
+com\example\inventory\controller\ProfileController.class
