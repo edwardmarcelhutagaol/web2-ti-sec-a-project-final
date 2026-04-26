@@ -3,6 +3,8 @@ package com.example.inventory.service;
 import com.example.inventory.model.Category;
 import com.example.inventory.model.User;
 import com.example.inventory.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,6 +18,10 @@ public class CategoryService {
 
     public List<Category> findAllByUser(User user) {
         return categoryRepository.findByUser(user);
+    }
+
+    public Page<Category> findAllByUser(User user, Pageable pageable) {
+        return categoryRepository.findByUser(user, pageable);
     }
 
     public Category save(Category category, User user) {

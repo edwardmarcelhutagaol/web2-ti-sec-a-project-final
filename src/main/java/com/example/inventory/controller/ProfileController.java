@@ -45,8 +45,25 @@ public class ProfileController {
     @PostMapping("/password")
     public String updatePassword(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam String newPassword) {
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        
+        // 1. Validate Old Password
+        if (!userService.checkPassword(user, oldPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Password lama tidak sesuai!");
+            return "redirect:/profile/password";
+        }
+        
+        // 2. Validate New Password Match
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Password baru dan konfirmasi tidak sama!");
+            return "redirect:/profile/password";
+        }
+        
         userService.updatePassword(user.getId(), newPassword);
         return "redirect:/profile?passwordSuccess";
     }

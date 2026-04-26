@@ -43,6 +43,7 @@ public class ProductController {
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalElements", productPage.getTotalElements());
         model.addAttribute("search", search);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categories", categoryService.findAllByUser(user));

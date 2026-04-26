@@ -22,9 +22,18 @@ public class CategoryController {
     }
 
     @GetMapping
-    public String list(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String list(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        model.addAttribute("categories", categoryService.findAllByUser(user));
+        org.springframework.data.domain.Page<Category> categoryPage = categoryService.findAllByUser(user, org.springframework.data.domain.PageRequest.of(page, 10));
+        
+        model.addAttribute("categories", categoryPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", categoryPage.getTotalPages());
+        model.addAttribute("totalElements", categoryPage.getTotalElements());
+        
         return "category/list";
     }
 
