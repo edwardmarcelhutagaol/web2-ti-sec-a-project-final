@@ -29,6 +29,11 @@ public class UserService {
     public User updateProfile(User user) {
         User existing = userRepository.findById(user.getId()).orElseThrow();
         existing.setFullName(user.getFullName());
+        existing.setEmail(user.getEmail());
+        existing.setPhoneNumber(user.getPhoneNumber());
+        existing.setAddress(user.getAddress());
+        existing.setBio(user.getBio());
+        existing.setProfileImageUrl(user.getProfileImageUrl());
         return userRepository.save(existing);
     }
 

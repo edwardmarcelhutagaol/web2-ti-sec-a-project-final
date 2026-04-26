@@ -24,6 +24,13 @@ public class ProfileController {
         return "profile/view";
     }
 
+    @GetMapping("/edit")
+    public String editForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+        model.addAttribute("user", user);
+        return "profile/edit";
+    }
+
     @PostMapping("/update")
     public String update(@ModelAttribute User user) {
         userService.updateProfile(user);

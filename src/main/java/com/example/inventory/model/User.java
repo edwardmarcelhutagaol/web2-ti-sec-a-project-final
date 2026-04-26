@@ -22,4 +22,10 @@ public class User {
     private String password;
 
     private String fullName;
+    private String email;
+    private String phoneNumber;
+    private String address;
+    @Column(length = 1000)
+    private String bio;
+    private String profileImageUrl;
 }

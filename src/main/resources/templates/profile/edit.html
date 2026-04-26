@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html th:replace="~{layout :: layout(~{::title}, ~{::.content})}">
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Profile</h2>
+            <a th:href="@{/profile}" class="btn btn-outline-secondary shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i>Back to Profile
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm p-4">
+                    <form th:action="@{/profile/update}" method="post">
+                        <input type="hidden" name="id" th:value="${user.id}">
+                        
+                        <!-- Basic Info Section -->
+                        <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Basic Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted border-0"><i class="bi bi-at"></i></span>
+                                    <input type="text" th:value="${user.username}" class="form-control bg-light border-0" readonly disabled>
+                                </div>
+                                <div class="form-text x-small">Username cannot be changed.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Full Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                                    <input type="text" name="fullName" th:value="${user.fullName}" class="form-control border-start-0" placeholder="Enter your full name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                                    <input type="email" name="email" th:value="${user.email}" class="form-control border-start-0" placeholder="example@domain.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-phone text-muted"></i></span>
+                                    <input type="text" name="phoneNumber" th:value="${user.phoneNumber}" class="form-control border-start-0" placeholder="+62...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Media Section -->
+                        <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Profile Media</h5>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Profile Image URL</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-image text-muted"></i></span>
+                                <input type="url" name="profileImageUrl" th:value="${user.profileImageUrl}" class="form-control border-start-0" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="form-text x-small text-muted mt-2">Provide a direct link to an image (JPEG, PNG).</div>
+                        </div>
+
+                        <!-- Bio & Address Section -->
+                        <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">About & Location</h5>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Current Address</label>
+                            <textarea name="address" th:text="${user.address}" class="form-control" rows="2" placeholder="Your street address..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Short Bio</label>
+                            <textarea name="bio" th:text="${user.bio}" class="form-control" rows="4" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-top d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">Save Changes</button>
+                            <a th:href="@{/profile}" class="btn btn-light px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

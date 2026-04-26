@@ -31,8 +31,17 @@ public class DashboardController {
 
     @GetMapping("/")
     public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        
         try {
-            User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+            User user = userService.findByUsername(userDetails.getUsername()).orElse(null);
+            
+            if (user == null) {
+                return "redirect:/login?logout";
+            }
+            
             List<Product> products = productService.findAllByUser(user.getId());
 
             double totalInventoryValue = products.stream()
@@ -60,6 +69,7 @@ public class DashboardController {
 
             return "dashboard";
         } catch (Exception e) {
+            System.err.println("Error rendering dashboard: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
