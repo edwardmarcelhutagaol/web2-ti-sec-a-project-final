@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Inventory System</title>
+    <title th:text="${title}">Inventory Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bootstrap Icons (keep for consistency) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
@@ -18,7 +20,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     colors: {
                         primary: {
@@ -31,6 +33,10 @@
                             400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 
                             800: '#1e293b', 900: '#0f172a',
                         }
+                    },
+                    borderRadius: {
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
                     }
                 }
             }
@@ -38,58 +44,67 @@
     </script>
     <style>
         [x-cloak] { display: none !important; }
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800" x-data="{ sidebarOpen: false }">
+<body class="bg-[#F8FAFC] font-sans text-slate-800 antialiased" x-data="{ sidebarOpen: false }">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
-            <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
+            <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2.5 rounded-xl hover:bg-slate-100 transition-colors">
                         <i class="bi bi-list text-2xl"></i>
                     </button>
-                    <a th:href="@{/}" class="flex items-center gap-2 text-xl font-bold text-slate-900 tracking-tight">
-                        <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-200">
-                            <i class="bi bi-box-seam"></i>
+                    <a th:href="@{/}" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 bg-primary-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-200 group-hover:rotate-12 transition-transform duration-300">
+                            <i class="bi bi-box-seam-fill text-xl"></i>
                         </div>
-                        <span class="hidden sm:inline">Inventory <span class="text-primary-600">Pro</span></span>
+                        <div class="flex flex-col leading-none">
+                            <span class="text-xl font-black text-slate-900 tracking-tight">Inventory<span class="text-primary-600">Pro</span></span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Management System</span>
+                        </div>
                     </a>
                 </div>
 
                 <div class="flex items-center gap-4">
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1.5 rounded-full hover:bg-slate-100 transition-all">
-                            <div class="w-9 h-9 bg-slate-200 rounded-full flex items-center justify-center overflow-hidden">
-                                <i class="bi bi-person-fill text-slate-500"></i>
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1.5 pl-4 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-all bg-white shadow-sm">
+                            <div class="flex flex-col items-end hidden sm:flex">
+                                <span class="font-black text-xs text-slate-900" sec:authentication="name">Username</span>
+                                <span class="text-[9px] font-bold text-emerald-500 uppercase">Online</span>
                             </div>
-                            <span class="hidden md:block font-medium text-sm text-slate-700" sec:authentication="name">Username</span>
-                            <i class="bi bi-chevron-down text-xs text-slate-400 mr-2"></i>
+                            <div class="w-10 h-10 bg-gradient-to-tr from-slate-100 to-slate-200 rounded-xl flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+                                <i class="bi bi-person-fill text-slate-400 text-xl"></i>
+                            </div>
                         </button>
                         
                         <!-- Dropdown menu -->
                         <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="transform opacity-0 scale-95"
-                             x-transition:enter-end="transform opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="transform opacity-100 scale-100"
-                             x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50" x-cloak>
-                            <a th:href="@{/profile}" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                <i class="bi bi-person text-lg text-slate-400"></i> My Profile
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="transform opacity-0 scale-95 translate-y-2"
+                             x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                             x-transition:leave-end="transform opacity-0 scale-95 translate-y-2"
+                             class="absolute right-0 mt-3 w-64 bg-white border border-slate-100 rounded-3xl shadow-2xl py-3 z-50 overflow-hidden" x-cloak>
+                            <div class="px-4 py-3 mb-2 bg-slate-50 mx-2 rounded-2xl">
+                                <p class="text-xs font-bold text-slate-400 uppercase">Signed in as</p>
+                                <p class="text-sm font-black text-slate-900 truncate" sec:authentication="name">User</p>
+                            </div>
+                            <a th:href="@{/profile}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                <i class="bi bi-person-circle text-lg opacity-70"></i> My Profile
                             </a>
-                            <a th:href="@{/profile/edit}" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                <i class="bi bi-pencil text-lg text-slate-400"></i> Edit Profile
+                            <a th:href="@{/profile/edit}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                <i class="bi bi-gear-wide-connected text-lg opacity-70"></i> Settings
                             </a>
-                            <div class="my-1 border-t border-slate-100"></div>
-                            <form th:action="@{/logout}" method="post" class="block">
-                                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                    <i class="bi bi-box-arrow-right text-lg"></i> Logout
+                            <div class="my-2 border-t border-slate-50"></div>
+                            <form th:action="@{/logout}" method="post" class="block px-2">
+                                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-black text-rose-600 hover:bg-rose-50 rounded-2xl transition-colors">
+                                    <i class="bi bi-box-arrow-right text-lg"></i> Sign Out
                                 </button>
                             </form>
                         </div>
@@ -98,37 +113,56 @@
             </div>
         </header>
 
-        <div class="flex-1 flex overflow-hidden">
+        <div class="flex-1 flex overflow-hidden container mx-auto">
             <!-- Sidebar -->
             <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" 
-                   class="fixed inset-y-0 left-0 lg:static lg:block w-64 bg-slate-900 text-slate-300 transform transition-transform duration-300 ease-in-out z-40">
-                <div class="h-full flex flex-col p-4">
-                    <nav class="flex-1 space-y-1">
-                        <a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/' ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/50' : 'hover:bg-slate-800 hover:text-white'}" 
-                           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium">
-                            <i class="bi bi-speedometer2 text-xl"></i> Dashboard
+                   class="fixed inset-y-0 left-0 lg:static lg:block w-72 transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] z-50">
+                <div class="h-full flex flex-col p-6">
+                    <nav class="flex-1 space-y-2">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">Main Menu</p>
+                        
+                        <a th:href="@{/}" th:classappend="${currentUri == '/' ? 'sidebar-link-active' : 'text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm'}" 
+                           class="flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 font-bold group">
+                            <i class="bi bi-grid-1x2-fill text-xl group-hover:scale-110 transition-transform"></i> 
+                            <span>Dashboard</span>
                         </a>
-                        <a th:href="@{/categories}" th:classappend="${#httpServletRequest.requestURI.startsWith('/categories') ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/50' : 'hover:bg-slate-800 hover:text-white'}" 
-                           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium">
-                            <i class="bi bi-tags text-xl"></i> Categories
+                        
+                        <a th:href="@{/categories}" th:classappend="${currentUri.startsWith('/categories') ? 'sidebar-link-active' : 'text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm'}" 
+                           class="flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 font-bold group">
+                            <i class="bi bi-tags-fill text-xl group-hover:scale-110 transition-transform"></i> 
+                            <span>Categories</span>
                         </a>
-                        <a th:href="@{/products}" th:classappend="${#httpServletRequest.requestURI.startsWith('/products') ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/50' : 'hover:bg-slate-800 hover:text-white'}" 
-                           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium">
-                            <i class="bi bi-box-seam text-xl"></i> Products
+                        
+                        <a th:href="@{/products}" th:classappend="${currentUri.startsWith('/products') ? 'sidebar-link-active' : 'text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm'}" 
+                           class="flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 font-bold group">
+                            <i class="bi bi-box-fill text-xl group-hover:scale-110 transition-transform"></i> 
+                            <span>Products</span>
                         </a>
+
+                        <div class="pt-8 pb-4">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">Account</p>
+                            <a th:href="@{/profile/password}" th:classappend="${currentUri.startsWith('/profile/password') ? 'sidebar-link-active' : 'text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm'}" 
+                               class="flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 font-bold group">
+                                <i class="bi bi-shield-lock-fill text-xl group-hover:scale-110 transition-transform"></i>
+                                <span>Security</span>
+                            </a>
+                        </div>
                     </nav>
 
-                    <div class="pt-4 border-t border-slate-800">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mb-2">Account Management</p>
-                        <a th:href="@{/profile/password}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors text-sm">
-                            <i class="bi bi-shield-lock"></i> Security Settings
-                        </a>
+                    <!-- Footer Sidebar -->
+                    <div class="mt-auto p-4 bg-primary-600 rounded-[2rem] text-white relative overflow-hidden group shadow-lg shadow-primary-200">
+                        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <p class="text-[10px] font-black text-primary-200 uppercase tracking-widest mb-1">Status</p>
+                        <p class="text-sm font-black mb-3">Premium Plan</p>
+                        <div class="w-full bg-primary-700 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-white w-3/4 h-full"></div>
+                        </div>
                     </div>
                 </div>
             </aside>
 
             <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10">
+            <main class="flex-1 overflow-y-auto p-6 lg:p-10">
                 <div th:replace="${content} ?: ~{}"></div>
             </main>
         </div>
@@ -142,7 +176,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
-             class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden" x-cloak></div>
+             class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 lg:hidden" x-cloak></div>
     </div>
 </body>
 </html>
